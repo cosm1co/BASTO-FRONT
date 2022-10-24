@@ -11,6 +11,7 @@ export default function FilterDevice({setDevice, setBovine}) {
     const handleFile = (e) => {
         e.preventDefault();
         if(e.target.attributes[0].nodeValue === 'All Devices') {
+            setBovine('')
             setDevice('')
         } else {
             setDevice(e.target.attributes[0].nodeValue)

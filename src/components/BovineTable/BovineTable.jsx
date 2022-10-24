@@ -64,6 +64,13 @@ export default function BovineTable() {
       <FilterPotrero setBovine = {setBovine} setDevice = {setDevice}/>
       <FilterDevice setDevice = {setDevice} setBovine = {setBovine}/>
       </div>
+
+        { !bovinesToShow()?.length
+        ?
+        <div>
+          <h1>❌ Todavía no hay animales cargados</h1>
+        </div>
+        :
       <div className={s.table_cnt}>
       <Table md striped center>
         <thead>
@@ -104,6 +111,8 @@ export default function BovineTable() {
       <Pagination currentPage={currentPage} maxPage={maxPage}/>
       </div>
       </div>
+
+        }
     </div>
   )
 }

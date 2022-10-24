@@ -12,6 +12,7 @@ export default function FilterPotreros({setBovine, setDevice}) {
         e.preventDefault();
         if(e.target.attributes[0].nodeValue === 'All Potreros') {
             setBovine('')
+            setDevice('')
         } else {
             setBovine(e.target.attributes[0].nodeValue)
             setDevice('')
