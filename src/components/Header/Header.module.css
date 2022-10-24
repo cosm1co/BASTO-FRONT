@@ -1,0 +1,18 @@
+.nav{
+    background-color: #fff;
+    display: flex;
+}
+
+.navItem{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.img{
+    width: 35px;
+    margin: 10px;
+}
+.h6{
+    margin: 10px 0px 10px 0px;
+}

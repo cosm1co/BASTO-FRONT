@@ -1,0 +1,57 @@
+
+.search_input{
+    width: 50% !important;
+  }
+
+.filter_cnt{
+  display: flex;
+  flex-direction: row;
+}
+
+
+.icons{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+
+.table_cnt{
+  padding: 0px 40px 50px 50px;
+}
+  
+.table{
+    min-width: 500px;
+  }
+  
+.input_cnt{
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 25px;
+  }
+
+.cnt_pagination{
+  display: flex;
+  float: right;
+}
+
+.text_center{
+  text-align: center;
+}
+  
+  @media (max-width: 988px){
+    
+    .search_input{
+      width: 100% !important;
+    }
+  
+    .App{
+      padding: 40px 5px;
+    }
+  
+    
+  .input_cnt{
+    padding-bottom: 15px;
+  }
+  
+  }
