@@ -15,16 +15,11 @@ export default function DeleteBovine({id}) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleDelete = () => {
+    // e.preventDefault()
     dispatch(deleteBovine(id))
     dispatch(getAllBovines())
   }
-
-  // useEffect(() => {
-  //   dispatch(getAllBovines())
-    
-  // }, [])
 
   return (
     <>
@@ -40,7 +35,7 @@ export default function DeleteBovine({id}) {
             <button className={s.btn} onClick={handleClose}>
             Cerrar
             </button>
-            <button type='submit' onClick={(e)=>handleSubmit(e)} className={s.btn_close}>
+            <button type='submit' onClick={handleDelete} className={s.btn_close}>
             Eliminar Animal
             </button>
         </Modal.Footer>

@@ -1,64 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { editBovine, clearData } from '../../redux/actions/bovineActions';
+import { editBovine, clearData, getAllBovines, createBovine } from '../../redux/actions/bovineActions';
 
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import { BiEdit } from 'react-icons/bi'
+
+import { useFormik } from 'formik';
+import { schema } from './schema';
 
 import s from './UpdateBovine.module.css'
 
-
-export default function UpdateBovine({id}) {
+export default function UpdateBovine({id, BiEdit}) {
     const { errorsBovine, allBovines, bovine } = useSelector((state) => state.bovinesReducer);
-    const bovineUpdate = allBovines.slice(1).filter(bovine => bovine._id === id)
-    const [novilloType, setNovilloType] = useState(bovineUpdate[0]?.type)
-    const [deviceType, setDeviceType] = useState(bovineUpdate[0]?.device)
-    const [potreroType, setPotreroType] = useState(bovineUpdate[0]?.potrero)
-    const dispatch = useDispatch()
-    const [input, setInput] = useState({
-      SENASA_ID: bovineUpdate[0].SENASA_ID,
-      type: bovineUpdate[0].type,
-      weight: bovineUpdate[0].weight,
-      potrero: bovineUpdate[0].potrero,
-      device: bovineUpdate[0].device,
-      n_device: bovineUpdate[0].n_device
-    })
+    const [newPotrero, setNewPotrero] = useState(false);
+    const bovineUpdate = allBovines.slice(1).filter(bovine => bovine._id === id);
+    const dispatch = useDispatch();
 
+    const onSubmit = function(e) {
+        if(id){
+            dispatch(editBovine(id, values))
+        } else {
+            dispatch(createBovine(values))
+        }
+        console.log('submitted')
+    }
+
+    
+    const {values, errors, handleBlur, handleChange, handleSubmit} = useFormik({
+        initialValues: {
+            SENASA_ID: id ? bovineUpdate[0]?.SENASA_ID : '',
+            type: id ? bovineUpdate[0]?.type : '',
+            weight: id ? bovineUpdate[0]?.weight : '',
+            potrero: id ? bovineUpdate[0]?.potrero : '',
+            device: id ? bovineUpdate[0]?.device : '',
+            n_device: id ? bovineUpdate[0]?.n_device : ''
+        },
+        validationSchema: schema,
+        onSubmit,
+    });
+    
     const [show, setShow] = useState(false);
 
     const handleClose = () => {
         setShow(false);
         dispatch(clearData())
-    }
+        dispatch(getAllBovines())
+            values({
+            SENASA_ID: id ? bovineUpdate[0]?.SENASA_ID : '',
+            type: id ? bovineUpdate[0]?.type : '',
+            weight: id ? bovineUpdate[0]?.weight : '',
+            potrero: id ? bovineUpdate[0]?.potrero : '',
+            device: id ? bovineUpdate[0]?.device : '',
+            n_device: id ? bovineUpdate[0]?.n_device : ''
+          })
+    };
+
     const handleShow = () => setShow(true);
 
-    const handleChange = function(e) {
+    const handlePotrero = (e) =>{
         e.preventDefault()
-        console.log(e.target.value)
-        if(e.target.name === 'type'){
-            setNovilloType(e.target.value)
-        }
-        if(e.target.name === 'potrero'){
-            setPotreroType(e.target.value)
-        }
-        if(e.target.name === 'device'){
-            setDeviceType(e.target.value)
-        }
-        setInput({
-          ...input,
-          [e.target.name]: e.target.value
-        })
-      }
+        setNewPotrero(true)
+        };
 
-    const handleSubmit = function(e) {
+    const handlePotreroClose = (e) =>{
         e.preventDefault()
-        dispatch(editBovine(id, input))
-    }
-
+        setNewPotrero(false)
+        };
+    
     return (
         <div>
-            <BiEdit onClick={handleShow} color='#86ac40' size={20} style={{right: '20px'}} className={s.icon}/>
+            {
+        id ? 
+        <BiEdit onClick={handleShow} color='#86ac40' size={20} style={{right: '20px'}} className={s.icon}/>
+        : <button onClick={handleShow} className={s.btn}>
+            Nuevo Animal
+          </button>
+      }
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -67,37 +84,72 @@ export default function UpdateBovine({id}) {
                 {!bovine.msg && errorsBovine === ''?
                 <Modal.Body>
                 <Form onSubmit={(e)=>handleSubmit(e)}>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group controlId="validationCustom01">
                         <Form.Label>ID SENASA*</Form.Label>
                         <Form.Control
                         type="text"
                         placeholder="Registro en SENASA"
                         name={'SENASA_ID'}
-                        value={input.SENASA_ID}
-                        onChange={(e) => handleChange(e)}
+                        value={values.SENASA_ID}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.SENASA_ID}
+                        isValid={!errors.SENASA_ID && values.SENASA_ID}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {errors.SENASA_ID}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Establecimiento al que pertenece el animal*</Form.Label>
-                        <Form.Select name={'potrero'} value={potreroType} onChange={(e) => handleChange(e)}>
+                        <Form.Select
+                        name={'potrero'}
+                        value={values.potrero}
+                        onChange={(e) => handleChange(e)}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.potrero}
+                        isValid={!errors.potrero && values.potrero}
+                        >
                         <option>Seleccione un establecimiento</option>
                         {
-                            allBovines[0].names?.length > 0 && allBovines[0].names.map((potrero, index) => {
+                            allBovines[0]?.names?.length > 0 && allBovines[0]?.names?.map((potrero, index) => {
                                 return <option key={index} value={potrero.toUpperCase()}>{potrero.toUpperCase()}</option>
                                })
                         }
                         </Form.Select>
+                        {!newPotrero ? 
+                        <button className={s.btn_potrero} onClick={(e)=>handlePotrero(e)}>Crear Potrero</button>:
+
+                            <div>
+                            <Form.Label>Agrega un Establecimiento</Form.Label>
+                            <Form.Control type="text" value={values.potrero.toUpperCase()} name={'potrero'} onChange={handleChange}/>
+                            <button className={s.btn_close} onClick={(e)=>handlePotreroClose(e)}>X</button>
+                            </div>
+                        }
+                        <Form.Control.Feedback type="invalid">
+                            {errors.potrero}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Tipo de Animal*</Form.Label>
-                        <Form.Select name={'type'} value={novilloType} onChange={(e) => handleChange(e)}>
+                        <Form.Select
+                        name={'type'}
+                        value={values.type}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.type}
+                        isValid={!errors.type && values.type}
+                        >
                         <option value={''}>Seleccione un tipo de animal</option>
                         <option value={'NOVILLO'}>NOVILLO</option>
                         <option value={'VAQUILLONA'}>VAQUILLONA</option>
                         <option value={'TORO'}>TORO</option>
                         </Form.Select>
+                        <Form.Control.Feedback type="invalid">
+                            {errors.type}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -106,18 +158,34 @@ export default function UpdateBovine({id}) {
                         type="number"
                         placeholder="0"
                         name={'weight'}
-                        value={input.weight}
-                        onChange={(e) => handleChange(e)}
+                        value={values.weight}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.type}
+                        isValid={!errors.weight && values.weight}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {errors.weight}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
                         <Form.Label>Dispositivo*</Form.Label>
-                        <Form.Select name={'device'} value={deviceType} onChange={(e) => handleChange(e)}>
-                            <option>Selecciona un tipo de animal</option>
+                        <Form.Select
+                        name={'device'}
+                        value={values.device}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.device}
+                        isValid={!errors.device && values.device}
+                        >
+                            <option>Selecciona un tipo de dispositivo</option>
                             <option value={'COLLAR'}>COLLAR</option>
                             <option value={'CARAVANA'}>CARAVANA</option>
                         </Form.Select>
+                        <Form.Control.Feedback type="invalid">
+                            {errors.device}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -126,20 +194,38 @@ export default function UpdateBovine({id}) {
                         type="text"
                         placeholder="Número de dispositivo"
                         name={'n_device'}
-                        value={input.n_device}
-                        onChange={(e) => handleChange(e)}
+                        value={values.n_device}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={!!errors.n_device}
+                        isValid={!errors.n_device && values.n_device}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {errors.n_device}
+                        </Form.Control.Feedback>
                     </Form.Group>
-
+                    {
+                        id?
                     <button className={s.btn} type="submit" >
                         Editar Animal
                     </button>
+                        :
+                    <button className={s.btn} type="submit" >
+                        Cargar Animal
+                    </button>
+                    }
                 </Form>
                 </Modal.Body>
                 : bovine.msg ?
-                <Modal.Body>
+                
+                    id ? 
+                    <Modal.Body>
+                        <p> ✅ Animal actualizado correctamente. </p>
+                    </Modal.Body>
+                    : 
                   
-                <p> ✅ Animal actualizado correctamente. </p>
+                <Modal.Body>
+                <p> ✅ Animal cargado correctamente. </p>
                 </Modal.Body>
             :
             <Modal.Body>
@@ -150,4 +236,4 @@ export default function UpdateBovine({id}) {
             </Modal>
         </div>
     )
-}
+};

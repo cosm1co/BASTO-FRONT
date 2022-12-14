@@ -1,7 +1,7 @@
 import React from 'react'
 import BovineTable from '../BovineTable/BovineTable'
 import Header from '../Header/Header'
-import CreateBovine from '../CreateBovine/CreateBovine'
+import UpdateBovine from '../UpdateBovine/UpdateBovine'
 import s from './Home.module.css'
 
 export default function Home() {
@@ -10,7 +10,9 @@ export default function Home() {
       <Header />
       <div className={s.home_body}>
       <h1 className={s.title}>Gestión de Animales</h1>
-      <CreateBovine />
+      <div>
+      <UpdateBovine />
+      </div>
       <BovineTable />
       </div>
     </div>

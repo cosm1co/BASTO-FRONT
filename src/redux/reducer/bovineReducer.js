@@ -18,6 +18,7 @@ const initialState = {
 
 const bovinesReducer = function(state = initialState, {type, payload}) {
     switch(type) {
+        
         case GET_ALL_BOVINES:
             return {
                 ...state,
@@ -33,7 +34,6 @@ const bovinesReducer = function(state = initialState, {type, payload}) {
             return {
                 ...state,
                 bovine: payload,
-                // updateBovine: payload.msg
             }
         case DELETE_BOVINE:
             return {

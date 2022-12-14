@@ -6,11 +6,11 @@ import s from './Filter.module.css'
 
 export default function FilterPotreros({setBovine, setDevice}) {
     const { allBovines } = useSelector((state) => state.bovinesReducer);
-    const [ fileSelect, setFileSelect ] = React.useState('All Potreros')
+    const [ fileSelect, setFileSelect ] = React.useState('Filtrar por potrero')
 
     const handleFile = (e) => {
         e.preventDefault();
-        if(e.target.attributes[0].nodeValue === 'All Potreros') {
+        if(e.target.attributes[0].nodeValue === 'Filtrar por potrero') {
             setBovine('')
             setDevice('')
         } else {
@@ -23,7 +23,7 @@ export default function FilterPotreros({setBovine, setDevice}) {
 
   return (
     <DropdownButton className={s.filter_select} id="dropdown-basic-button" title={ fileSelect } variant="secondary">
-        <Dropdown.Item value={'All Potreros'} onClick={(e) => handleFile(e)}> Filtrar por Potrero </Dropdown.Item>
+        <Dropdown.Item value={'Filtrar por potrero'} onClick={(e) => handleFile(e)}> Filtrar por Potrero </Dropdown.Item>
         { allBovines[0]?.names?.length > 0 && allBovines[0]?.names.map((potrero, index) => {
             return (
             <Dropdown.Item 

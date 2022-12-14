@@ -6,11 +6,11 @@ import s from './Filter.module.css'
 
 export default function FilterDevice({setDevice, setBovine}) {
     const devices = ["COLLAR", "CARAVANA"]
-    const [ fileSelect, setFileSelect ] = React.useState('All Devices')
+    const [ fileSelect, setFileSelect ] = React.useState('Filtrar por dispositivo')
 
     const handleFile = (e) => {
         e.preventDefault();
-        if(e.target.attributes[0].nodeValue === 'All Devices') {
+        if(e.target.attributes[0].nodeValue === 'Filtrar por dispositivo') {
             setBovine('')
             setDevice('')
         } else {
@@ -23,7 +23,7 @@ export default function FilterDevice({setDevice, setBovine}) {
 
   return (
     <DropdownButton className={s.filter_select} id="dropdown-basic-button" title={ fileSelect } variant="secondary">
-        <Dropdown.Item value={'All Devices'} onClick={(e) => handleFile(e)}> Filtrar por Dispositivo </Dropdown.Item>
+        <Dropdown.Item value={'Filtrar por dispositivo'} onClick={(e) => handleFile(e)}> Filtrar por Dispositivo </Dropdown.Item>
         { devices?.length > 0 && devices?.map((device, index) => {
             return (
             <Dropdown.Item 

@@ -1,11 +1,13 @@
 import React from 'react'
 import {useState, useEffect} from 'react';
 import {useDispatch,useSelector} from 'react-redux';
-import { getAllBovines } from '../../redux/actions/bovineActions'
+import { getAllBovines } from '../../redux/actions/bovineActions';
 import UpdateBovine from '../UpdateBovine/UpdateBovine';
-import DeleteBovine from '../DeleteBovine/DeleteBovine'
-import FilterPotrero from '../FilterPotreros/FilterPotreros'
+import DeleteBovine from '../DeleteBovine/DeleteBovine';
+import FilterPotrero from '../FilterPotreros/FilterPotreros';
 import Pagination from '../Pagination/Pagintaion';
+import { BiEdit } from 'react-icons/bi';
+
 
 import Table from 'react-bootstrap/Table';
 
@@ -38,7 +40,6 @@ export default function BovineTable() {
 
   useEffect(()=> {
     dispatch(getAllBovines(search, bovine, device));
-    // eslint-disable-next-line
   }, [search, bovine, device])
  
   function handleChange(e) {
@@ -61,7 +62,7 @@ export default function BovineTable() {
     </div>
       <div className={s.filter_cnt}>
       <h1>Lista de Animales</h1>
-      <FilterPotrero setBovine = {setBovine} setDevice = {setDevice}/>
+      <FilterPotrero setBovine = {setBovine} setDevice = {setDevice} />
       <FilterDevice setDevice = {setDevice} setBovine = {setBovine}/>
       </div>
 
@@ -97,7 +98,7 @@ export default function BovineTable() {
                 <td className={s.text_center}>{bovine.n_device}</td>
                 <td className={s.text_center}>
                   <div className={s.icons}>
-                  <UpdateBovine id={bovine._id}/>
+                  <UpdateBovine id={bovine._id} BiEdit={BiEdit}/>
                   <DeleteBovine id={bovine._id}/>
                   </div>
                 </td>
